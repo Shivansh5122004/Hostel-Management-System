@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Rooms - Hostel Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div class="logo">
+            🏠 Hostel<span>Management</span>
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="students.html">Students</a>
+            <a href="Rooms.html">Rooms</a>
+            <a href="Allocation.html">Allocation</a>
+            <a href="fees.html">Fees</a>
+            <a href="complaints.html">Complaints</a>
+            <a href="notices.html">Notices</a>
+            <a href="visitors.html">Visitors</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main>
+
+        <h1 class="page-title">
+            Room Management
+        </h1>
+
+
+        <!-- ================= ADD ROOM FORM ================= -->
+
+        <div class="form-box">
+
+            <form id="roomForm">
+
+                <div class="form-grid">
+
+
+                    <!-- ROOM NUMBER -->
+
+                    <div class="form-group">
+
+                        <label for="room_no">
+                            Room Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="room_no"
+                            name="room_no"
+                            placeholder="101"
+                            required>
+
+                    </div>
+
+
+                    <!-- BLOCK -->
+
+                    <div class="form-group">
+
+                        <label for="block">
+                            Block Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="block"
+                            name="block"
+                            placeholder="A Block"
+                            required>
+
+                    </div>
+
+
+                    <!-- ROOM TYPE -->
+
+                    <div class="form-group">
+
+                        <label for="type">
+                            Room Type
+                        </label>
+
+                        <select
+                            id="type"
+                            name="type"
+                            required>
+
+                            <option value="">
+                                Select Room Type
+                            </option>
+
+                            <option value="Single">
+                                Single
+                            </option>
+
+                            <option value="Double">
+                                Double
+                            </option>
+
+                            <option value="Triple">
+                                Triple
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- CAPACITY -->
+
+                    <div class="form-group">
+
+                        <label for="capacity">
+                            Capacity
+                        </label>
+
+                        <input
+                            type="number"
+                            id="capacity"
+                            name="capacity"
+                            min="1"
+                            placeholder="2"
+                            required>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="submit-btn">
+
+                        + Add Room
+
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <!-- MESSAGE -->
+
+            <div
+                id="roomMessage"
+                class="message">
+            </div>
+
+        </div>
+
+
+        <!-- ================= ROOM RECORDS ================= -->
+
+        <div class="table-box">
+
+            <h2 class="page-title">
+                Room Records
+            </h2>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Room No.</th>
+                        <th>Block</th>
+                        <th>Type</th>
+                        <th>Capacity</th>
+                        <th>Occupied</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="roomTableBody">
+
+                    <tr>
+
+                        <td colspan="7">
+                            Loading...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        © 2026 Hostel Management System |
+        Room Management
+
+    </footer>
+
+
+    <!-- ================= ROOM JAVASCRIPT ================= -->
+
+    <script>
+
+        const roomForm =
+            document.getElementById("roomForm");
+
+        const roomMessage =
+            document.getElementById("roomMessage");
+
+        const roomTableBody =
+            document.getElementById("roomTableBody");
+
+
+        // ==========================================
+        // LOAD ROOMS
+        // ==========================================
+
+        async function loadRooms() {
+
+            try {
+
+                const response =
+                    await fetch("/api/rooms");
+
+                const result =
+                    await response.json();
+
+
+                if (!result.success) {
+
+                    roomTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="7"
+                                style="color:red;">
+                                ${result.message}
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+
+                if (!result.data ||
+                    result.data.length === 0) {
+
+                    roomTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="7">
+                                No rooms found.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+
+                roomTableBody.innerHTML = "";
+
+
+                result.data.forEach(room => {
+
+                    const occupied =
+                        room.occupied ?? 0;
+
+                    const capacity =
+                        room.capacity ?? 0;
+
+                    const status =
+                        occupied >= capacity
+                            ? "Full"
+                            : "Available";
+
+
+                    const row = document.createElement("tr");
+
+
+                    row.innerHTML = `
+
+                        <td>${room.id}</td>
+
+                        <td>${room.room_no}</td>
+
+                        <td>${room.block}</td>
+
+                        <td>${room.type}</td>
+
+                        <td>${capacity}</td>
+
+                        <td>${occupied}</td>
+
+                        <td>
+                            <span>
+                                ${status}
+                            </span>
+                        </td>
+
+                    `;
+
+
+                    roomTableBody.appendChild(row);
+
+                });
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                roomTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7"
+                            style="color:red;">
+                            Rooms data load nahi ho raha.
+                        </td>
+                    </tr>
+                `;
+
+            }
+
+        }
+
+
+        // ==========================================
+        // ADD ROOM
+        // ==========================================
+
+        roomForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                // GET FORM VALUES
+
+                const room_no =
+                    document.getElementById(
+                        "room_no"
+                    ).value.trim();
+
+
+                const block =
+                    document.getElementById(
+                        "block"
+                    ).value.trim();
+
+
+                const type =
+                    document.getElementById(
+                        "type"
+                    ).value;
+
+
+                const capacity =
+                    document.getElementById(
+                        "capacity"
+                    ).value;
+
+
+                // VALIDATION
+
+                if (
+                    !room_no ||
+                    !block ||
+                    !type ||
+                    !capacity
+                ) {
+
+                    roomMessage.style.color = "red";
+
+                    roomMessage.textContent =
+                        "Please fill all room fields";
+
+                    return;
+
+                }
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "/api/rooms",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+
+                                    room_no:
+                                        room_no,
+
+                                    block:
+                                        block,
+
+                                    type:
+                                        type,
+
+                                    capacity:
+                                        Number(
+                                            capacity
+                                        )
+
+                                })
+
+                            }
+                        );
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (!result.success) {
+
+                        roomMessage.style.color =
+                            "red";
+
+                        roomMessage.textContent =
+                            result.message ||
+                            "Room add nahi hua.";
+
+                        return;
+
+                    }
+
+
+                    // SUCCESS
+
+                    roomMessage.style.color =
+                        "green";
+
+                    roomMessage.textContent =
+                        "Room added successfully";
+
+
+                    // RESET FORM
+
+                    roomForm.reset();
+
+
+                    // RELOAD TABLE
+
+                    loadRooms();
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    roomMessage.style.color =
+                        "red";
+
+                    roomMessage.textContent =
+                        "Server se connection nahi ho raha.";
+
+                }
+
+            }
+        );
+
+
+        // ==========================================
+        // PAGE LOAD
+        // ==========================================
+
+        loadRooms();
+
+    </script>
+
+</body>
+
+</html>

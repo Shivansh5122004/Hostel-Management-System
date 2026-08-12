@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Room Allocation - Hostel Management</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+            🏠 Hostel<span>Management</span>
+        </div>
+
+        <nav>
+
+            <a href="index.html">Home</a>
+
+            <a href="students.html">Students</a>
+
+            <a href="Rooms.html">Rooms</a>
+
+            <a href="Allocation.html">Allocation</a>
+
+            <a href="fees.html">Fees</a>
+
+            <a href="complaints.html">Complaints</a>
+
+            <a href="notices.html">Notices</a>
+
+            <a href="visitors.html">Visitors</a>
+
+            <a href="contact.html">Contact</a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main>
+
+        <h1 class="page-title">
+            Room Allocation
+        </h1>
+
+
+        <!-- ALLOCATION FORM -->
+
+        <div class="form-box">
+
+            <form id="allocationForm"
+                  onsubmit="addAllocation(event)">
+
+                <div class="form-grid">
+
+
+                    <!-- STUDENT -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Student Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="student_name"
+                            placeholder="Enter student name"
+                            required>
+
+                    </div>
+
+
+                    <!-- ROOM -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Room Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="room_no"
+                            placeholder="Example: 101"
+                            required>
+
+                    </div>
+
+
+                    <!-- BED -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Bed Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="bed_no"
+                            placeholder="Example: Bed 1"
+                            required>
+
+                    </div>
+
+
+                    <!-- DATE -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Allocation Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="allocation_date"
+                            required>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="submit-btn">
+
+                        🛏️ Allocate Room
+
+                    </button>
+
+
+                </div>
+
+            </form>
+
+
+            <!-- MESSAGE -->
+
+            <div id="allocationMessage"
+                 class="message">
+
+            </div>
+
+        </div>
+
+
+        <!-- ALLOCATION RECORDS -->
+
+        <div class="table-box">
+
+            <h2 class="page-title">
+                Allocation Records
+            </h2>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Student</th>
+
+                        <th>Room</th>
+
+                        <th>Bed</th>
+
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="allocationTable"></tbody>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        © 2026 Hostel Management System |
+        Room Allocation
+
+    </footer>
+
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
